@@ -2,8 +2,24 @@
 title: Introduction
 ---
 
-<img src="assets/images/spark-logo.png" alt="Spark Logo" style="width: 100px; float: left; margin-right: 10px;">
+<img src="assets/images/spark-logo.png" alt="Spark Logo" style="width: 60px; float: left; margin-right: 10px;">
 
 
-Work in progress...
+These notes are being adapted from the CS/DS 549 Spark! Machine Learning Practicum and
+so still contain some references to that course.
+
+## Overview
+
+This site has some practical information on using command shells, the Shared Computing Cluster (SCC) at BU,
+and Python for machine learning.
+
+## Topics
+
+1. [Command Shells](01_command_shells.qmd)
+2. [Python Environments](02_python_environments.qmd)
+3. [Git and GitHub](03_git_github.qmd)
+4. [Shared Computing Cluster](04_scc.qmd)
+5. [SCC Continued](07_scc_cont.qmd)
+6. [SCC Batch Computing](08_scc_batch_computing.qmd)
+
 
