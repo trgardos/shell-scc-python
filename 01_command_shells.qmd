@@ -277,7 +277,7 @@ usage: tail [-f] [-n] [file...]
 ```sh
 usage: man [-k] command...
 ```
-Note that for the most of the "builtin" commands shown above, there might ::: {.notes}
+Note that for the most of the "builtin" commands shown above, there might
 be detailed command help, which is the case for MacOS `zsh`. SCC's Linux
 `bash` does have more detailed help on builtin commands.
 

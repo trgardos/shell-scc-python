@@ -7,11 +7,11 @@ project:
     - 04_scc.qmd
     - 07_scc_cont.qmd
     - 08_scc_batch_computing.qmd
-    - 10-pytorch-01.qmd
-    - 11-pytorch-02-dataloaders.qmd
+    #- 10-pytorch-01.qmd
+    #- 11-pytorch-02-dataloaders.qmd
 format:
   revealjs:
-    footer: "DS549 -- Gardos"
+    footer: "Gardos"
     scrollable: true
     slide-number: c/t
     show-slide-number: all
