@@ -3,14 +3,14 @@ project:
   output-dir: _site
   render:
     - index.qmd
-    - schedule.qmd
-    - projects.qmd
+    #- schedule.qmd
+    #- projects.qmd
     - 01_command_shells.qmd
     - 02_python_environments.qmd
     - 03_git_github.qmd
     - 04_scc.qmd
-    - 07_scc_cont.qmd
-    - 08_scc_batch_computing.qmd
+    - 05_scc_cont.qmd
+    - 06_scc_batch_computing.qmd
     #- 10-pytorch-01.qmd
     #- 12-pytorch-02-dataloaders.qmd
     #- 13-pytorch-03-model-def.qmd
@@ -63,10 +63,10 @@ website:
             text: 03 -- Git and GitHub
           - href: 04_scc.qmd
             text: 04 -- Shared Computing Cluster
-          - href: 07_scc_cont.qmd
-            text: 07 -- SCC Continued
-          - href: 08_scc_batch_computing.qmd
-            text: 08 -- SCC Batch Computing
+          - href: 05_scc_cont.qmd
+            text: 05 -- SCC Continued
+          - href: 06_scc_batch_computing.qmd
+            text: 06 -- SCC Batch Computing
           #- href: 10-pytorch-01.qmd
           #  text: 10 -- PyTorch 01 - Intro and Tensors
           #- href: 12-pytorch-02-dataloaders.qmd
