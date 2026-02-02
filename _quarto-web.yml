@@ -32,10 +32,10 @@ resources:
 
 
 website:
-  title: "CS/DS 549 Spark! Machine Learning Practicum"
+  title: "Shell, SCC and Python Tips and Tricks"
   back-to-top-navigation: true
   favicon: "assets/images/spark-logo.png"
-  page-footer: "CS/DS 549 Spark! Machine Learning Practicum"
+  page-footer: "Shell, SCC and Python Tips"
   navbar:
     background: "primary"
     tools:
@@ -50,9 +50,9 @@ website:
     search: true
     contents:
       - href: index.qmd
-        text: Home -- Syllabus
-      - href: schedule.qmd
-      - href: projects.qmd
+        text: Home
+      #- href: schedule.qmd
+      #- href: projects.qmd
       - section: "Notes"
         contents:
           - href: 01_command_shells.qmd
