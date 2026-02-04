@@ -11,8 +11,9 @@ Here, we'll get familiar with the process and commands.
 
 SCC's batch job system is based on the Sun Grid Engine 
 
-References:
-https://www.bu.edu/tech/support/research/system-usage/running-jobs/
+**References:**
+
+[https://www.bu.edu/tech/support/research/system-usage/running-jobs/](https://www.bu.edu/tech/support/research/system-usage/running-jobs/)
 
 All the examples here need to be run on an SCC node. A login node is fine.
 
@@ -40,7 +41,7 @@ You can check the status of your job in the queue with
 $ qstat -u tgardos
 job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID 
 -----------------------------------------------------------------------------------------------------------------
- 294013 0.00000 printenv   tgardos      qw    09/21/2024 20:25:16                                    1 
+2949274 0.00000 printenv   tgardos      qw    02/04/2026 14:47:55  
 ```
 
 The `-u userID` option only shows your jobs. Leave it off and you will see all the jobs
@@ -57,15 +58,23 @@ You see it lists the
 * queue  -- the queue name if the job is running
 
 At some point `qstat` will no longer show any jobs in the queue. This one doesn't
-run for long, so you probably won't catch it running.
+run for long, so you probably won't catch it running, but if you do, it will look like this:
+
+```bash
+$ qstat -u tgardos
+job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID 
+-----------------------------------------------------------------------------------------------------------------
+2949274 0.74554 printenv   tgardos      r     02/04/2026 14:49:56 academic@scc-gf1.scc.bu.edu        1   
+```
 
 After the job finishes, you'll see in the directory you submitted the job from
 2 files:
 
 ```bash
-$ ls -al pri*
--rw-r--r-- 1 tgardos sparkgrp    0 Sep 21 20:26 printenv.e294013
--rw-r--r-- 1 tgardos sparkgrp 1531 Sep 21 20:26 printenv.o294013
+$ ls -l
+total 1
+-rw-r--r-- 1 tgardos dl4ds-ta    0 Feb  4 14:49 printenv.e2949274
+-rw-r--r-- 1 tgardos dl4ds-ta 2062 Feb  4 14:49 printenv.o2949274
 ```
 
 Notice the files are the job name with either a `.e<jobID>` or `.o<jobID>` output.
@@ -98,25 +107,100 @@ set as part of the Sun Grid Engine batch queueing system.
 
 You can get information about completed jobs with 
 
+::: {.scrollbox}
+
 ```bash
-$ qacct -j 294013
+$ qacct -j 2949274
 ==============================================================
-qname        cds                 
-hostname     scc-tc4.scc.bu.edu  
-group        sparkgrp            
-owner        tgardos             
-project      sparkgrp            
+qname        engineering         
+hostname     scc-pi6.scc.bu.edu  
+group        mhcpep              
+owner        gychuang            
+project      mhcpep              
 department   defaultdepartment   
-jobname      printenv            
-jobnumber    294013              
+jobname      sge.jcf             
+jobnumber    2949274             
 taskid       undefined
 account      sge                 
 priority     0                   
-qsub_time    Wed Sep 21 20:25:16 2024
-start_time   Wed Sep 21 20:26:33 2024
-end_time     Wed Sep 21 20:26:33 2024
-...
+qsub_time    Tue Mar  4 00:25:36 2025
+start_time   Tue Mar  4 00:27:53 2025
+end_time     Tue Mar  4 00:27:54 2025
+granted_pe   mpi4                
+slots        4                   
+failed       0    
+exit_status  1                   
+ru_wallclock 1            
+ru_utime     0.207        
+ru_stime     0.111        
+ru_maxrss    19576               
+ru_ixrss     0                   
+ru_ismrss    0                   
+ru_idrss     0                   
+ru_isrss     0                   
+ru_minflt    18585               
+ru_majflt    0                   
+ru_nswap     0                   
+ru_inblock   0                   
+ru_oublock   40                  
+ru_msgsnd    0                   
+ru_msgrcv    0                   
+ru_nsignals  0                   
+ru_nvcsw     1786                
+ru_nivcsw    38                  
+cpu          0.318        
+mem          0.000             
+io           0.000             
+iow          0.000             
+maxvmem      0.000
+arid         undefined
+==============================================================
+qname        academic            
+hostname     scc-gf1.scc.bu.edu  
+group        dl4ds               
+owner        tgardos             
+project      dl4ds               
+department   defaultdepartment   
+jobname      printenv            
+jobnumber    2949274             
+taskid       undefined
+account      sge                 
+priority     0                   
+qsub_time    Wed Feb  4 14:47:55 2026
+start_time   Wed Feb  4 14:49:56 2026
+end_time     Wed Feb  4 14:49:56 2026
+granted_pe   NONE                
+slots        1                   
+failed       0    
+exit_status  0                   
+ru_wallclock 0            
+ru_utime     0.008        
+ru_stime     0.014        
+ru_maxrss    3676                
+ru_ixrss     0                   
+ru_ismrss    0                   
+ru_idrss     0                   
+ru_isrss     0                   
+ru_minflt    777                 
+ru_majflt    0                   
+ru_nswap     0                   
+ru_inblock   8                   
+ru_oublock   24                  
+ru_msgsnd    0                   
+ru_msgrcv    0                   
+ru_nsignals  0                   
+ru_nvcsw     64                  
+ru_nivcsw    0                   
+cpu          0.022        
+mem          0.000             
+io           0.000             
+iow          0.000             
+maxvmem      0.000
+arid         undefined
 ```
+
+:::
+
 We'll come back to why 'department' and 'project' maybe impact which resources
 have access to.
 
@@ -124,11 +208,19 @@ have access to.
 
 You can delete a job waiting in queue with `qdel jobID` command.
 
-## VSCode Remote
+## Other Interactive Tools
 
 We're going to be playing with some short scripts. You can do everything
-via the SCC Dashboard login node and text editors, but it can be much more 
-convenient to use _VS Code with Remote Extension Pack_.
+via the SCC Dashboard login node and text editors, but there are alternatives:
+
+- ssh into a login node, `ssh <username>@scc1.bu.edu`
+- start an interactive VS Code server
+- start an interactive desktop and open VS Code or terminal
+
+It's also to use a local instance of _VS Code with Remote Extension Pack_.
+
+> Note: This is not officially supported by SCC and has the annoying 
+> problem of having to re-connect to the remote host every time you restart VS Code.
 
 1. Open VS Code locally on your machine.
 2. Install the "Remote Development" extension pack by Microsoft from the extension marketplace.
@@ -247,7 +339,7 @@ with `#$`.
 ```{.bash filename="scriptv3.sh"}
 #!/bin/bash -l
 
-#$ -P ds549           # Assign to project ds549
+#$ -P dl4ds           # Assign to project dl4ds
 #$ -l h_rt=12:00:00   # Set a hard runtime limit
 #$ -N hello-world     # Give the job a name other than the shell script name
 #$ -j y               # merge the error and regular output into a single file
@@ -293,12 +385,12 @@ and activates it.
 ```{.python filename="run-cuda-simple.sh"}
 #!/bin/bash -l
 
-#$ -P ds549           # Assign to project ds549
+#$ -P dl4ds           # Assign to project dl4ds
 #$ -j y               # merge the error and regular output into a single file
 
-module load miniconda academic-ml/fall-2024
+module load miniconda academic-ml/spring-2026
 
-conda activate fall-2024-pyt
+conda activate spring-2026-pyt
 
 echo "Print python version"
 python --version
@@ -334,6 +426,8 @@ run-cuda-simple.sh.o316561
 
 Let's look at the one where we didn't request a GPU.
 
+::: {.scrollbox}
+
 ```{.bash filename="run-cuda-simple.sh.o316551"}
 -------------------------------------------------------------------------------
 To activate the conda environment in a batch script or in a terminal run the
@@ -363,7 +457,11 @@ torch cuda is available: False
 tensor([1, 2, 3])
 ```
 
+:::
+
 And the one where we did.
+
+::: {.scrollbox}
 
 ```{.bash filename="run-cuda-simple.sh.0316561"}
 -------------------------------------------------------------------------------
@@ -393,6 +491,7 @@ Python 3.11.9
 torch cuda is available: True
 tensor([1, 2, 3], device='cuda:0')
 ```
+:::
 
 You can see [here](https://www.bu.edu/tech/support/research/system-usage/running-jobs/submitting-jobs/#job-resources)
 for a more list of resources to specify, but a good example is
@@ -402,12 +501,195 @@ $ qsub -l gpus=1 -l gpu_c=7.0 -pe omp 8  script.sh
 ```
 
 The argument `-l qpu_c=7.0` is the GPU capability requested, which currently is
-one of `[3.5, 5, 6.0, 7.0, 8.6]`.
+one of `[3.5, 5, 6.0, 6.1, 7.0, 7.5, 8.0, 8.6, 8.9, 9.0]`.
 
 There's a dedicated page for
 [GPU Computing on the SCC](https://www.bu.edu/tech/support/research/software-and-programming/gpu-computing/).
 
 You can list all installed GPUs with `qgpus`.
+
+::: {.scrollbox}
+
+```bash
+# Run Feb 4, 2026
+$ qgpus
+gpu_type  total  in_use  available
+--------  -----  ------  ---------
+A100          5      0      5
+A100-80G     24     21      3
+A40          68     31     35
+A6000        76     24     52
+H200         20     20      0
+K40m         14      2     12
+L40           6      2      4
+L40S        118     87     30
+P100         28     10     18
+P100-16G     23      4     19
+RTX6000       5      0      5
+RTX6000ada     30     18     12
+RTX8000       8      2      6
+TitanV        8      0      8
+TitanXp      10      0     10
+V100         65     33     31
+V100-32G      4      3      1
+```
+
+:::
+
+To see more details, the resource number and which queues they're on, you can use `qgpus -v`.
+
+::: {.scrollbox}
+
+```bash
+# Run on Feb 4, 2026
+$ qgpus -v
+host      gpu_type  gpu_c  gpu_mem  cpu_   cpu_    gpu_   gpu_    gpu_   queue_list                    
+                                    total  in_use  total  in_use  avail                                
+--------  --------  -----  -------  -----  ------  -----  ------  -----  ------------------------------
+scc-205   A100      8.0    40G      32     0       4      0       4      thinfilament-gpu,thinfilament-gpu-pub
+scc-207   A100      8.0    40G      32     1       1      0       1      li-rbsp-gpu-pub,li-rbsp-gpu   
+scc-210   A100      8.0    80G      32     32      4      4       0      neuro-autonomy,neuro-autonomy-pub
+scc-212   A100      8.0    80G      32     7       4      4       0      a100                          
+scc-219   A100      8.0    80G      32     12      2      1       1      joshigroup-gpu,joshigroup-gpu-pub
+scc-220   A100      8.0    80G      32     16      4      4       0      labcigroup-gpu-pub,labcigroup-gpu
+scc-221   A100      8.0    80G      32     0       2      0       2      chapmangroup-gpu,chapmangroup-gpu-pub
+scc-305   A100      8.0    80G      48     48      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-306   A100      8.0    80G      48     48      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-211   A40       8.6    48G      32     10      4      4       0      a40                           
+scc-213   A40       8.6    48G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-214   A40       8.6    48G      32     16      4      4       0      ece-pub,ece,ece-long          
+scc-215   A40       8.6    48G      32     0       4      0       4      ece-pub,ece,ece-long          
+scc-216   A40       8.6    48G      32     0       4      0       4      ece-pub,ece,ece-long          
+scc-217   A40       8.6    48G      32     4       2      1       1      csgpu-pub,csgpu               
+scc-218   A40       8.6    48G      32     16      2      2       0      csgpu-pub,csgpu               
+scc-301   A40       8.6    48G      32     0       6      0       6      neuro-autonomy,neuro-autonomy-pub
+scc-302   A40       8.6    48G      32     32      6      4       0      neuro-autonomy,neuro-autonomy-pub
+scc-303   A40       8.6    48G      32     0       10     0       10     iris-gpu,iris-gpu-pub         
+scc-f03   A40       8.6    48G      32     0       6      0       6      neuro-autonomy,neuro-autonomy-pub
+scc-f04   A40       8.6    48G      32     22      10     10      0      ivcbuyin-long,ivcbuyin,ivcbuyin-pub
+scc-f05   A40       8.6    48G      32     10      8      6       2      ivcbuyin,ivcbuyin-pub         
+scc-307   A6000     8.6    48G      32     0       4      0       4      batcomputer,batcomputer-pub   
+scc-603   A6000     8.6    48G      32     4       5      1       4      iris-gpu,iris-gpu-pub         
+scc-604   A6000     8.6    48G      32     0       8      0       8      iris-gpu,iris-gpu-pub         
+scc-605   A6000     8.6    48G      32     0       8      0       8      iris-gpu,iris-gpu-pub         
+scc-606   A6000     8.6    48G      32     0       8      0       8      iris-gpu,iris-gpu-pub         
+scc-607   A6000     8.6    48G      32     0       6      0       6      iris-gpu,iris-gpu-pub         
+scc-608   A6000     8.6    48G      32     0       8      0       8      iris-gpu,iris-gpu-pub         
+scc-e01   A6000     8.6    48G      32     20      9      5       4      ivcbuyin,ivcbuyin-pub         
+scc-e02   A6000     8.6    48G      32     24      10     10      0      ivcbuyin,ivcbuyin-pub         
+scc-e03   A6000     8.6    48G      32     12      10     8       2      ivcbuyin,ivcbuyin-pub         
+scc-a03   H200      9.0    144G     32     32      4      4       0      h200                          
+scc-a04   H200      9.0    144G     32     17      4      4       0      h200                          
+scc-a05   H200      9.0    144G     32     28      4      4       0      ece-pub,ece,ece-long          
+scc-a06   H200      9.0    144G     32     32      4      4       0      ece-pub,ece,ece-long          
+scc-a15   H200      9.0    144G     32     32      2      2       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-a16   H200      9.0    144G     32     32      2      2       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-c01   K40m      3.5    12G      20     3       2      2       0      katia,k40                     
+scc-c04   K40m      3.5    12G      20     0       4      0       4      kulisgpu,kulisgpu-pub         
+scc-c05   K40m      3.5    12G      20     0       4      0       4      kulisgpu,kulisgpu-pub         
+scc-sc1   K40m      3.5    12G      16     0       2      0       2      tcn-pub,tcn                   
+scc-sc2   K40m      3.5    12G      16     0       2      0       2      tcn-pub,tcn                   
+scc-304   L40       8.9    48G      32     8       6      2       4      ivcbuyin,ivcbuyin-pub         
+scc-501   L40S      8.9    48G      32     17      4      4       0      l40s                          
+scc-502   L40S      8.9    48G      32     32      4      3       0      l40s                          
+scc-503   L40S      8.9    48G      32     10      4      4       0      l40s                          
+scc-504   L40S      8.9    48G      32     15      4      4       0      l40s                          
+scc-505   L40S      8.9    48G      32     28      4      4       0      l40s                          
+scc-506   L40S      8.9    48G      32     0       4      0       4      l40s                          
+scc-507   L40S      8.9    48G      32     20      2      2       0      czcb-buyin,czcb-buyin-pub     
+scc-508   L40S      8.9    48G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-509   L40S      8.9    48G      32     4       2      1       1      csgpu-pub,csgpu               
+scc-510   L40S      8.9    48G      32     17      4      4       0      l40s                          
+scc-511   L40S      8.9    48G      32     21      4      4       0      l40s                          
+scc-512   L40S      8.9    48G      32     21      4      4       0      l40s                          
+scc-513   L40S      8.9    48G      32     28      4      4       0      l40s                          
+scc-601   L40S      8.9    48G      32     24      8      6       2      cuigpu,cuigpu-pub             
+scc-a01   L40S      8.9    48G      32     28      8      7       1      cuigpu,cuigpu-pub             
+scc-a02   L40S      8.9    48G      32     20      8      5       3      cuigpu,cuigpu-pub             
+scc-j01   L40S      8.9    48G      32     8       4      1       3      ece-pub,ece,ece-long          
+scc-j02   L40S      8.9    48G      32     8       4      1       3      ece-pub,ece,ece-long          
+scc-j03   L40S      8.9    48G      32     12      4      2       2      ece-pub,ece,ece-long          
+scc-j04   L40S      8.9    48G      32     16      4      1       3      ece-pub,ece,ece-long          
+scc-j05   L40S      8.9    48G      32     8       4      2       2      ece-pub,ece,ece-long          
+scc-j06   L40S      8.9    48G      32     24      4      4       0      ece-pub,ece,ece-long          
+scc-j07   L40S      8.9    48G      32     4       4      4       0      ece-pub,ece,ece-long          
+scc-j08   L40S      8.9    48G      32     20      4      3       1      ece-pub,ece,ece-long          
+scc-j09   L40S      8.9    48G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-j10   L40S      8.9    48G      32     4       2      1       1      csgpu-pub,csgpu               
+scc-j11   L40S      8.9    48G      32     17      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-j12   L40S      8.9    48G      32     16      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-j13   L40S      8.9    48G      32     16      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-c08   P100      6.0    12G      28     8       2      1       1      p100                          
+scc-c09   P100      6.0    12G      28     17      2      2       0      p100                          
+scc-c10   P100      6.0    12G      28     12      2      2       0      p100                          
+scc-c11   P100      6.0    12G      28     24      2      2       0      p100                          
+scc-c12   P100      6.0    12G      28     4       4      1       3      csgpu-pub,csgpu               
+scc-c13   P100      6.0    12G      28     0       4      0       4      ece-pub,ece,ece-long          
+scc-c14   P100      6.0    12G      28     0       4      0       4      ece-pub,ece,ece-long          
+scc-x01   P100      6.0    12G      28     16      2      2       0      onrcc-gpu,onrcc-gpu-pub       
+scc-x02   P100      6.0    12G      28     0       2      0       2      onrcc-gpu,onrcc-gpu-pub       
+scc-x03   P100      6.0    12G      28     0       2      0       2      onrcc-gpu,onrcc-gpu-pub       
+scc-x04   P100      6.0    12G      28     0       2      0       2      onrcc-gpu,onrcc-gpu-pub       
+scc-k01   P100      6.0    16G      28     24      4      3       1      ece-pub,ece,ece-long          
+scc-k02   P100      6.0    16G      28     8       4      1       3      ece-pub,ece,ece-long          
+scc-k03   P100      6.0    16G      28     0       4      0       4      cuigpu,cuigpu-pub             
+scc-k04   P100      6.0    16G      28     0       4      0       4      cuigpu,cuigpu-pub             
+scc-k05   P100      6.0    16G      28     0       4      0       4      cuigpu,cuigpu-pub             
+scc-k06   P100      6.0    16G      28     0       1      0       1      csdata,csdata-pub             
+scc-k07   P100      6.0    16G      28     12      2      0       2      bil-koo-gpu,bil-koo-gpu-pub   
+scc-f02   RTX6000   7.5    24G      32     0       5      0       5      ivcbuyin,ivcbuyin-pub         
+scc-308   RTX6000ada  8.9    48G      32     24      4      4       0      batcomputer,batcomputer-pub   
+scc-309   RTX6000ada  8.9    48G      64     25      10     7       3      ivcbuyin,ivcbuyin-pub         
+scc-602   RTX6000ada  8.9    48G      32     0       8      0       8      cuigpu,cuigpu-pub             
+scc-609   RTX6000ada  8.9    48G      64     20      8      7       1      ivcbuyin,ivcbuyin-pub         
+scc-e04   RTX8000   7.5    48G      32     8       8      2       6      ivcbuyin,ivcbuyin-pub         
+scc-f01   TitanV    7.0    12G      24     0       8      0       8      ivcbuyin-int                  
+scc-e05   TitanXp   6.1    12G      28     0       10     0       10     ivcbuyin,ivcbuyin-pub         
+scc-201   V100      7.0    16G      32     32      4      4       0      academic-gpu-pub,academic-gpu 
+scc-202   V100      7.0    16G      32     4       4      1       3      academic-gpu-pub,academic-gpu 
+scc-203   V100      7.0    16G      32     0       4      0       4      academic-gpu-pub,academic-gpu 
+scc-204   V100      7.0    16G      32     8       4      2       2      academic-gpu-pub,academic-gpu 
+scc-k08   V100      7.0    16G      28     4       2      1       1      thinfilament-gpu,thinfilament-gpu-pub
+scc-k09   V100      7.0    16G      28     5       2      2       0      casaq-gpu,casaq-gpu-pub       
+scc-k10   V100      7.0    16G      28     28      1      0       0      bil-koo-gpu,bil-koo-gpu-pub   
+scc-k11   V100      7.0    16G      28     4       2      1       1      csgpu-pub,csgpu               
+scc-q23   V100      7.0    16G      32     8       1      1       0      korolevgroup-gpu-pub,korolevgroup-gpu
+scc-q24   V100      7.0    16G      32     8       1      1       0      labcigroup-gpu-pub,labcigroup-gpu
+scc-q25   V100      7.0    16G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-q26   V100      7.0    16G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-q27   V100      7.0    16G      32     16      2      1       1      csgpu-pub,csgpu               
+scc-q28   V100      7.0    16G      32     0       2      0       2      csgpu-pub,csgpu               
+scc-q30   V100      7.0    16G      28     16      4      1       3      jchengroup,jchengroup-pub     
+scc-q31   V100      7.0    16G      32     4       4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-q32   V100      7.0    16G      32     4       4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-q33   V100      7.0    16G      32     0       4      0       4      ece-pub,ece,ece-long          
+scc-q34   V100      7.0    16G      32     0       4      0       4      ece-pub,ece,ece-long          
+scc-q35   V100      7.0    16G      32     20      4      4       0      biophys-gpu-pub,biophys-gpu   
+scc-q36   V100      7.0    16G      32     12      4      2       2      aclabgroup,aclabgroup-pub     
+scc-x05   V100      7.0    16G      28     20      2      2       0      v100                          
+scc-x06   V100      7.0    16G      28     2       2      2       0      v100                          
+scc-208   V100      7.0    32G      32     8       2      2       0      thinfilament-gpu,thinfilament-gpu-pub
+scc-209   V100      7.0    32G      32     0       1      0       1      cuigpu,cuigpu-pub             
+scc-q29   V100      7.0    32G      32     4       1      1       0      korolevgroup-gpu-pub,korolevgroup-gpu
+```
+
+:::
+
+And the GPUs on CDS queues:
+
+```bash
+# Run on Feb 26, 2026
+$ qgpus -v | grep cds
+scc-305   A100      8.0    80G      48     48      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-306   A100      8.0    80G      48     48      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-a15   H200      9.0    144G     32     32      2      2       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-a16   H200      9.0    144G     32     32      2      2       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-j11   L40S      8.9    48G      32     17      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-j12   L40S      8.9    48G      32     16      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-j13   L40S      8.9    48G      32     16      4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-q31   V100      7.0    16G      32     4       4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-long
+scc-q32   V100      7.0    16G      32     4       4      4       0      cds-gpu-pub,cds-gpu,cds-gpu-longer
+```
 
 ## Exploring Queues
 
@@ -428,6 +710,8 @@ $ qselect -l gpus=1 | wc -l
 ```
 
 We can search for queues with 'cds' in the name: 
+
+::: {.scrollbox}
 
 ```bash
 $ qselect -q *cds*
@@ -464,6 +748,8 @@ cds-gpu@scc-j12.scc.bu.edu
 cds-gpu@scc-q31.scc.bu.edu
 cds-m1024@scc-v08.scc.bu.edu
 ```
+
+:::
 
 And the count:
 
@@ -644,7 +930,7 @@ with the script
 ```{.bash filename="run-cifar-train.sh"}
 #!/bin/bash -l
 
-#$ -P ds549           # Assign to project ds549
+#$ -P dl4ds           # Assign to project dl4ds
 #$ -j y               # merge the error and regular output into a single file
 
 module load miniconda academic-ml/fall-2024

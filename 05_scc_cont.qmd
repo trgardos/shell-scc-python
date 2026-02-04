@@ -8,6 +8,7 @@ We'll now delve into three more topics on SCC:
 
 1. SCC Modules
 2. Python environments on SCC
+3. Batch computing on SCC
 
 # SCC Modules
 
@@ -208,59 +209,79 @@ Let's see what's available.
 
 ```sh
 $ module avail academic-ml
------------------------------------ /share/module.8/programming ------------------------------------
-   academic-ml/fall-2024 (D)    academic-ml/spring-2024
+
+--------------------------------------------------- /share/module.8/programming ---------------------------------------------------
+   academic-ml/fall-2024    academic-ml/spring-2024    academic-ml/spring-2026 (D)
+   academic-ml/fall-2025    academic-ml/spring-2025
 ```
 
 There will be a new, updated version added every semester.
 
+To get detailed information about the module, you can type:
+
 ```sh
-------------------------------------------------------------------------------------------------
-   /share/module.8/programming/academic-ml/fall-2024.lua:
-------------------------------------------------------------------------------------------------
+$ module show academic-ml/spring-2026
+```
 
-academic-ml fall-2024: This provides a Python 3.11 conda environment with popular machine
-learning libraries pre-loaded. New versions will be created for the start of the Spring and Fall
-semesters.
+Which will output something like:
 
-This module provides a trio of conda environments. All of these will correctly use GPUs when run
-on GPU-equipped compute nodes, and will run on CPU-only compute nodes as well. 
+<div style="max-height: 22rem; overflow-y: auto; border: 1px solid #ddd; padding: .75rem; border-radius: .25rem;">
+
+
+```sh
+-------------------------------------------------------------------------------------------------------------------------------
+   /share/module.8/programming/academic-ml/spring-2026.lua:
+-------------------------------------------------------------------------------------------------------------------------------
+academic-ml spring-2026: This provides a Python 3.12 conda environment with popular machine learning libraries pre-loaded. New versions will be created for the start of the Spring and Fall semesters.
+
+This module provides a trio of conda environments. All of these will correctly use GPUs when run on GPU-equipped compute nodes, and will run on CPU-only compute nodes as well. 
+
+*** Note ***
+The environments have minimum CUDA compute capabilities. The compute capabilty can be selected in the menu options for OnDemand jobs. For batch jobs, use the following flag:
+
+    # This sets a minimum of 6.0
+    #$ -l gpu_c=6.0
+
+Requirements for each environment are:
+    * PyTorch:    >= 7.0
+    * Tensorflow: >= 6.0
+    * Jax:        >= 6.0
 
 To activate the PyTorch-based environment do:
 
     module load miniconda
-    conda activate fall-2024-pyt
+    conda activate spring-2026-pyt
     
 To activate the Tensorflow-based environment do:
 
     module load miniconda
-    conda activate fall-2024-tf
+    conda activate spring-2026-tf
 
 And finally, to activate the Jax-based environment do:
 
     module load miniconda
-    conda activate fall-2024-jax
+    conda activate spring-2026-jax
 
 The PyTorch environment provides:
-    * PyTorch v2.4.0 (https://pytorch.org/)
+    * PyTorch v2.9.1 (https://pytorch.org/)
     * torchaudio, torchvision, torchtext, torchdata (https://pytorch.org/)
     * PyTorch Lightning (https://lightning.ai/docs/pytorch/stable/)
     * Magma (https://icl.utk.edu/magma/)
     * Whisper (https://github.com/openai/whisper)
-    * Intel Extension for PyTorch (https://github.com/intel/intel-extension-for-pytorch)
+    * JAX v0.8.2 (CPU-only) (https://jax.readthedocs.io)
 
     
 The Tensorflow environment provides:
-    * Tensorflow v2.17.0 (https://www.tensorflow.org)
+    * Tensorflow v2.20.0 (https://www.tensorflow.org)
     * tensorflow-probability, tensorflow-similarity, tensorflow-estimator,
       tensorflow-datasets, tensorflow-hub, tensorflow-recommenders (https://www.tensorflow.org)
-    * JAX v0.4.30 (CPU-only) (https://jax.readthedocs.io)
+    * JAX v0.8.2 (CPU-only) (https://jax.readthedocs.io)
     * For tips on setting Tensorflow parallelism, see: https://dl.acm.org/doi/pdf/10.1145/3431388
     
 The Jax environment provides:
-    * Jax v0.4.30 (https://jax.readthedocs.io)
-    * PyTorch v2.4.0 (CPU-only) (https://pytorch.org/)
-    * Tensorflow v2.17.0 (CPU-only) (https://www.tensorflow.org)
+    * Jax v0.8.2 (https://jax.readthedocs.io)
+    * PyTorch v2.9.1 (CPU-only) (https://pytorch.org/)
+    * Tensorflow v2.20.0 (CPU-only) (https://www.tensorflow.org)
     
 Jax-based programs typically use the dataloaders from PyTorch or Tensorflow, which is why those
 libraries are installed with this environment.
@@ -277,6 +298,8 @@ The following lists of libraries and software are common to all environments:
         ** scikit-learn (https://scikit-learn.org)
         ** scikit-image (https://scikit-image.org)
         ** OpenAI models (https://platform.openai.com)
+        ** Nvidia NCCL (https://developer.nvidia.com/nccl)
+
     
     * Popular libraries:
         ** Numpy (https://numpy.org)
@@ -285,16 +308,67 @@ The following lists of libraries and software are common to all environments:
         ** OpenCV (https://opencv.org)
         ** Pillow (https://python-pillow.org)
         ** NetworkX (https://networkx.org)
-        ** graph-tool (https://graph-tool.skewed.de)
         ** Dask (https://www.dask.org)
         ** Polars (https://pola.rs)
+        ** Ray (https://docs.ray.io/)
     
     * Development tools:
-        ** gcc and g++ compilers v13.2.0 (https://gcc.gnu.org/)
+        ** gcc and g++ compilers v13.3.0 (https://gcc.gnu.org/)
         ** Nvidia CUDA SDK (https://developer.nvidia.com/)
         ** Jupyter Lab and Notebook (https://jupyter.org)
         ** Spyder (https://www.spyder-ide.org)
+    
+To see the complete list and specific versions of all libraries that are installed, first activate the environment and then run:
+
+    conda list
+    
+For more information on academic-ml, please see https://www.bu.edu/tech/support/research/software-and-programming/common-languages/python/python-ml/academic-machine-learning-environment/
+
+The following environment variables are provided for convenience:
+$SCC_ACADEMIC_ML_DIR -- Base Package Directory
+$SCC_ACADEMIC_ML_ENV_PYT -- Conda Environment (PyTorch)
+$SCC_ACADEMIC_ML_ENV_TF -- Conda Environment (Tensorflow)
+$SCC_ACADEMIC_ML_ENV_JAX -- Conda Environment (Jax)
+
+The following environment variables provide the location of .yml files for cloning these
+environments:
+
+$SCC_ACADEMIC_ML_YML_PYT -- Conda .yml File for PyTorch Environment
+$SCC_ACADEMIC_ML_YML_TF -- Conda .yml File for Tensorflow Environment
+$SCC_ACADEMIC_ML_YML_JAX -- Conda .yml File for Jax Environment
+
+$SCC_ACADEMIC_ML_YML_BASIC_PYT -- Simpler conda .yml File for PyTorch Environment
+$SCC_ACADEMIC_ML_YML_BASIC_TF -- Simpler conda .yml File for Tensorflow Environment
+$SCC_ACADEMIC_ML_YML_BASIC_JAX -- Simpler conda .yml File for Jax Environment
+
+  
+
+prereq("miniconda")
+whatis("Name:         academic-ml")
+whatis("Version:      spring-2026")
+whatis("Categories:   programming")
+whatis("Keywords:     alma8, programming, ai, machine, learning, python, pytorch, tensorflow, jax")
+whatis("URL:          https://www.bu.edu/tech/support/research/software-and-programming/common-languages/python/python-ml/academic-machine-learning-environment/")
+whatis("Description:  This provides a Python 3.12 conda environment with popular machine learning libraries pre-loaded. New versions will be created for the start of the Spring and Fall semesters.")
+setenv("SCC_ACADEMIC_ML_BASE","/share/pkg.8/academic-ml/spring-2026")
+setenv("SCC_ACADEMIC_ML_DIR","/share/pkg.8/academic-ml/spring-2026/install")
+setenv("SCC_ACADEMIC_ML_ENV_PYT","/share/pkg.8/academic-ml/spring-2026/install/spring-2026-pyt")
+setenv("SCC_ACADEMIC_ML_ENV_TF","/share/pkg.8/academic-ml/spring-2026/install/spring-2026-tf")
+setenv("SCC_ACADEMIC_ML_ENV_JAX","/share/pkg.8/academic-ml/spring-2026/install/spring-2026-jax")
+setenv("SCC_ACADEMIC_ML_YML_PYT","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-pyt.yml")
+setenv("SCC_ACADEMIC_ML_YML_TF","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-tf.yml")
+setenv("SCC_ACADEMIC_ML_YML_JAX","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-jax.yml")
+setenv("SCC_ACADEMIC_ML_YML_BASIC_PYT","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-pyt-basic.yml")
+setenv("SCC_ACADEMIC_ML_YML_BASIC_TF","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-tf-basic.yml")
+setenv("SCC_ACADEMIC_ML_YML_BASIC_JAX","/share/pkg.8/academic-ml/spring-2026/install/academic-ml-spring-2026-jax-basic.yml")
+setenv("TF_CPP_MIN_LOG_LEVEL","2")
+prepend_path("CONDA_ENVS_PATH","/share/pkg.8/academic-ml/spring-2026/install")
+setenv("TF_NUM_INTEROP_THREADS","1")
+setenv("TF_NUM_INTRAOP_THREADS","1")
+setenv("JAX_PLATFORMS","cpu")
 ```
+
+</div>
 
 You can also see this 
 [page](https://www.bu.edu/tech/support/research/software-and-programming/common-languages/python/python-ml/academic-machine-learning-environment/)
@@ -306,9 +380,9 @@ From [TechWeb](https://www.bu.edu/tech/support/research/software-and-programming
 
 > When requesting a Jupyter Notebook, Jupyter Lab, or Spyder OnDemand session,
 > enter the conda activation command in the Pre-Launch Command field. This
-> screenshot shows an example of starting a Jupyter Lab session with the fall-2024-tf environment.
+> screenshot shows an example of starting a Jupyter Lab session with the spring-2026-pyt environment.
 
-![](assets/images/06_scc_cont/jupyter_fall2024.png){width=200% fig-align="center"}
+![](assets/images/06_scc_cont/jupyter_spring-2026.png){height=400px fig-align="center" .lightbox}
 
 
 ## `module unload`
@@ -346,7 +420,8 @@ Here's how to avoid that.
 
 ## Python and Virtual Environments
 
-So let's assume we ran
+So let's assume we loaded and started an academic-ml environment as described above
+or at the very leastran
 
 ```sh
 $ module load python3
@@ -374,41 +449,33 @@ using the `pipenv` framework. The process is similar for each.
 
 Load the python version you plan to use.
 ```sh
-$ module load python3/3.X.Y
+$ module load python3
 ```
 
-Now create the virtual environment in the `/projectnb/sparkgrp` space. Either in a location to share with team members:
+Now create the virtual environment in the `/projectnb/dl4ds/students/<your-username>` space. 
 
 <pre>
-$ python3 -m venv /projectnb/sparkgrp/venvs/<i style="color:red">projectname</i>/<i style="color:red">mynewenv</i>
-</pre>
-
-Or in your own workspace there.
-<pre>
-$ python3 -m venv /projectnb/sparkgrp/workspaces/<i style="color:red">yourusername</i>/<i style="color:red">mynewenv</i>
+$ python3 -m venv <i style="color:red">.venv</i>
 </pre>
 
 Then you can activate the virtual environment
 
 <pre>
-<span style="color:green"># Activate shared virtual environment</span>
-$ source /projectnb/sparkgrp/venvs/<i style="color:red">projectname</i>/<i style="color:red">mynewenv</i>/bin/activate
-
-<span style="color:green"># Or activate personal virtual environment</span>
-$ source /projectnb/sparkgrp/workspaces/<i style="color:red">yourusername</i>/<i style="color:red">mynewenv</i>/bin/activate
+$ source <i style="color:red">.venv</i>/bin/activate
 </pre>
 
-As opposed to the shared packages option of the previous section, to install 
-additional packages you only need to run a simple `pip` command:
+To install additional packages you only need to run a simple `pip` command:
 
 <pre>
 $ pip install <i style="color:red">packagename</i>
 </pre>
 
 and finally to deactivate the virtual environment, just type
-```sh
+
+<pre>
 $ deactivate
-```
+</pre>
+
 as usual.
 
 ## Package Caches
@@ -416,6 +483,8 @@ as usual.
 You may find that even though you create and run virtual environments on your project folder, you get quote exceeded
 error for your home directory. This could be because conda or pip are caching python installation packages in
 your home directory.
+
+> Note: As of February 4, 2026, caching in PIP seems to be disabled.
 
 ## Package Caches -- Conda
 
@@ -454,6 +523,8 @@ $ conda info
 
 ## Package Caches -- PIP
 
+> Note: As of February 4, 2026, caching in PIP seems to be disabled.
+
 For PIP, try running
 
 ```bash
@@ -463,4 +534,3 @@ pip cache info
 
 to find out more about where pip is caching. See [caching](https://pip.pypa.io/en/stable/topics/caching/) for more info.
 
-It seems that SCC has disabled pip caching as of Fall 2024 (or maybe earlier).
