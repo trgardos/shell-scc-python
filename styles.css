@@ -25,4 +25,10 @@
     padding: 10px;
 }
 
-
+.scrollbox {
+    max-height: 22rem;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+  }
