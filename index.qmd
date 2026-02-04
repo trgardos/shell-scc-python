@@ -21,7 +21,7 @@ and Python for machine learning.
 2. [Python Environments](02_python_environments.qmd)
 3. [Git and GitHub](03_git_github.qmd)
 4. [Shared Computing Cluster](04_scc.qmd)
-5. [SCC Continued](07_scc_cont.qmd)
-6. [SCC Batch Computing](08_scc_batch_computing.qmd)
+5. [SCC Continued](05_scc_cont.qmd)
+6. [SCC Batch Computing](06_scc_batch_computing.qmd)
 
 
