@@ -4,10 +4,11 @@ title: "Shared Computing Cluster"
 
 ## Intro to SCC
 
-<div style="float: right; margin: 0 1em 1em 0;">
-  <img src="./assets/images/04_scc/sccphoto1_sm.jpg" alt="SCC Photo">
-</div>
+:::: {.columns}
+::: {.column width="60%"}
 BU's Shared Computing Cluster (SCC) is heterogeneeous Linux cluster composed of both _Shared_ and _Buy-in_ nodes.
+
+Located at [MGHPCC](https://www.mghpcc.org/) in Holyoke, MA, alongside clusters from Harvard, MIT, NE, UMass, Yale, ...
 
 Currently:
 
@@ -17,6 +18,13 @@ Currently:
 * 16 Petabytes of storage
 
 CDS has buy-in nodes.
+:::
+::: {.column width="40%"}
+![](./assets/images/04_scc/MGHPCC-1.jpg){width="70%" align="center"}
+
+![](./assets/images/04_scc/ma_map.jpeg){width="70%" align="center"}
+:::
+::::
 
 <!--
 ## CDS SCC Buy-In
@@ -372,4 +380,3 @@ repo back to the main repo.
         * debugging jobs
 * SCC interactive sessions
 
-You can see some of this info on my [SCC Tips](https://github.com/BU-Spark/ml-549-course/blob/main/docs/scc-tips.md)
