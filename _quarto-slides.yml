@@ -5,8 +5,8 @@ project:
     - 02_python_environments.qmd
     - 03_git_github.qmd
     - 04_scc.qmd
-    - 07_scc_cont.qmd
-    - 08_scc_batch_computing.qmd
+    - 05_scc_cont.qmd
+    - 06_scc_batch_computing.qmd
     #- 10-pytorch-01.qmd
     #- 11-pytorch-02-dataloaders.qmd
 format:
