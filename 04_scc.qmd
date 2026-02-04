@@ -12,11 +12,11 @@ BU's Shared Computing Cluster (SCC) is heterogeneeous Linux cluster composed of 
 Currently:
 
 * Over 12,000 shared CPU cores
-* Over 16,000 Buy-in CPU cores
-* Over 400 GPUs
-* 14 Petabytes of storage
+* Over 17,000 buy-in CPU cores
+* Over 500 GPUs
+* 16 Petabytes of storage
 
-CDS has buy-in nodes also.
+CDS has buy-in nodes.
 
 <!--
 ## CDS SCC Buy-In
@@ -143,8 +143,7 @@ uid=426625(tgardos) gid=363482(sparkgrp) groups=363482(sparkgrp),430422(ds549),4
 
 This shows my user ID (uid) and my default group ID (gid) which is currently `sparkgrp`.
 
-Most of you will likely be in the `ds549` group. When you get assigned projects,
-you will also be added to the `sparkgrp` group.
+Most of you will likely be in the `dl4ds` group. 
 
 If you just want to _just_ see your default group, you can use the command:
 
@@ -260,7 +259,7 @@ total 0
 ```
 
 See that I have files from both groups. People in `sparkgrp` can read and write
-to `file1.txt` and people in `ds549` can read from file2.txt.
+to `file1.txt` and people in `dl4ds` can read from file2.txt.
 
 ## SCC Projects
 
@@ -282,11 +281,11 @@ $ id -ng
 sparkgrp
 ```
 
-You should each be in the `ds549` project.
+You should each be in the `dl4ds` project.
 
 ```bash
-~ $ cd /projectnb/ds549
-/projectnb/ds549 $ ls
+~ $ cd /projectnb/dl4ds
+/projectnb/dl4ds $ ls
 admin  archive  datasets  materials  projects  README.md  students  workspaces
 ```
 
@@ -296,30 +295,27 @@ You each have a dedicated working directory in `students`.
 /projectnb/ds549 $ cd students
 
 /projectnb/ds549/students $ ls
-abhaya13  anandro  chimmay   fahuddin  hengc     jmstein  markmaci  mounika5  shivenrk  songfan  xudd
-ac25      ayush25  daf       gluzmans  jianying  manavk   marychoe  mvoong    smallk    thannah  yuanlj
-alokma    bmv2021  enricoll  grbxni    jinanshi  marekp   mchg      njquisel  solheim   wycheng  ywnl
+... // list of student directories
 ```
 
-::: {.callout-note}
-You will each be added to the `sparkgrp` group as well.
-:::
-
 ::: {.callout-important}
-Super important point. You each should be working on your own copy of the project
+Super important point. If you are ever collaborating on a project,
+you each should be working on your own copy of the project
 repo in your own working directory. Use **GitHub** for asynchronous collaboration.
+
+Never simultaneously edit the same files on SCC.
 :::
 
 ## SCC GitHub Exercise
 
 :::: {.columns}
 ::: {.column width="60%"}
-![](./assets/images/04_scc/github-ml-549-course.png){width="600px"}
+![](./assets/images/04_scc/github-ml-549-course.png){width="90%"}
 :::
 ::: {.column width="40%"}
 Let's do a quick exercise to get you comfortable with using GitHub from SCC.
 
-Navigate to [https://github.com/bu-spark/ml-549-course](https://github.com/bu-spark/ml-549-course).
+Navigate to [https://github.com/trgardos/shell-scc-python](https://github.com/trgardos/shell-scc-python).
 
 Fork the repo to your GitHub account.
 
@@ -330,18 +326,18 @@ Fork the repo to your GitHub account.
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](./assets/images/04_scc/github-ml-549-course2.png){width="600px"}
+![](./assets/images/04_scc/github-ml-549-course2.png){width="90%"}
 :::
 ::: {.column width="50%"}
 
-Navigate to `/projectnb/ds549/students/<your-username>`.
+Navigate to `/projectnb/dl4ds/students/<your-username>`.
 
 Clone the repo to your working directory.
 
 ```bash
-$ git clone https://github.com/BU-Spark/ml-549-course.git
+$ git clone https://github.com/trgardos/shell-scc-python.git
 
-$ cd ml-549-course
+$ cd shell-scc-python
 $ git remote -v
 ```
 :::

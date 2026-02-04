@@ -8,6 +8,8 @@ title: Introduction
 These notes are being adapted from the CS/DS 549 Spark! Machine Learning Practicum and
 so still contain some references to that course.
 
+See an issue or want to propose some changes? Please [open an issue](https://github.com/trgardos/shell-scc-python/issues) or [submit a pull request](https://github.com/trgardos/shell-scc-python/pulls).
+
 ## Overview
 
 This site has some practical information on using command shells, the Shared Computing Cluster (SCC) at BU,
